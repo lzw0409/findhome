@@ -1,73 +1,78 @@
 <?php
     include_once 'header.php';
-?>
+    
+    include 'includes/connectiondata.php';
 
-    <section class="searchbar">
+// Create connection
+$conn = new mysqli($server, $user, $pass, $dbname, $port);
+
+
+$id = $_POST['cusID'];
+
+$id = mysqli_real_escape_string($conn, $id);
+?>
+<!DOCTYPE html>
+
+<html lang="en">
+
+<body>
+
+<section class="searchbar">
         	<div class="clearcontainer">
         		<h1>Search customers:</h1>
         		<form action="search.php" method="POST">
-        			<input type="text" name="cusID" placeholder = "Enter customerID or First or Last name">
-        			<input type="submit" value="Search">
-        		</form>        		
-        	</div>        	
-    </section>
-
+        		<input type="text" name="cusID" placeholder = "Enter customerID or First or Last name">
+        		<input type="submit" value="Search">
+        		</form>
+        		
+        	</div>
+        	
+        </section>
 
 <?php
 
-include 'includes/connectiondata.php';
-
-$cusID = $_POST['cusID'];
-
-$cusID = mysqli_real_escape_string($conn, $cusID);
-// this is a small attempt to avoid SQL injection
-// better to use prepared statements
-
-$query = "SELECT *
-			FROM mydb.client c
-			WHERE c.id LIKE '%$cusID%' OR c.first_name LIKE '%$cusID%' OR c.last_name LIKE '%$cusID%'";
-
-
-$result = mysqli_query($conn, $query)
+$query = "SELECT * FROM client c WHERE c.id LIKE '$cusID';";
+$result =mysqli_query($conn, $query)
 or die(mysqli_error($conn));
-$queryResult = mysqli_num_rows($result);
 
 
-if($queryResult < 1){
-	echo "No matches found, please enter something else.";
-	include_once 'footer.php';
-	exit;
-}
-?>
+
+echo '<div class="tablecontainer">
+	<table>
+  		<tr>
+  			<th>Client ID</th>
+    		<th>Firstname</th>
+    		<th>Lastname</th> 
+    		<th>More</th>
+    
+  		</tr>';
+  		
+$Cid = $Fname = $Lname = "";
+  		
+while($row = mysqli_fetch_array($result, MYSQLI_BOTH))
+  {
+  $Cid = $row[id];
+  $Fname = $row[first_name];
+  $Lname = $row[last_name];
+  
+  }
+  		echo '<tr>
+  			  <td>'.$Cid.'</td>';
+   		echo '<td>'.$Fname.'</td>'; 
+    	echo '<td>'.$Lname.'</td>';
+    	echo '<td><a href=clientmoreinfo.php>View More</a></td>';
+    		
+  		echo '</tr>
+  		
+	</table>
+</div>';
+
+?>		
+
+</body>
+<footer>
+         <p>FindHome Design By Luyao Wang, Ziwei Liu, Copyright &copy; 2018</p>
+         </footer>
 
 
-    <table>
-        <thead>
-            <tr>
-                <th>Client ID</th>
-    			<th>Firstname</th>
-    			<th>Lastname</th> 
-    			<th>More</th>
-            </tr>
-        </thead>
-            <tbody>
-
-
-<?php
-    while ($row = mysqli_fetch_array($result)) {
-        $address = $row['cusID'];
-        print '<tr>
-        <td>'.$row['id'].'</td>
-        <td>'.$row['fist_name'].'</td>
-        <td>'.$row['last_name'].'</td>
-        <td>'<a href="clientmoreinfo.php">View More</a>'</td>
-        </tr>';
-    }
-?>
-            </tbody>
-        </table>
-
-
-<?php
-    include_once 'footer.php';
-?>
+</html>

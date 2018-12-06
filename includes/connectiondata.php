@@ -7,6 +7,10 @@ $pass = "guest";
 $port="3229";
 
 
-$conn = new mysqli_connect($server, $user, $pass, $port, $dbname);
-or die('Error connecting to MySQL server.');
+$conn = new mysqli($server, $user, $pass, $dbname, $port);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
+echo "Connected successfully";
 ?>
