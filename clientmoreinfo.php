@@ -1,51 +1,48 @@
 <?php
     include_once 'header.php';
-?>
-<!DOCTYPE html>
+    include 'includes/connectiondata.php';
+    include 'searchCus.php';
 
-<html lang="en">
 
-<body>
 
-<section class="searchbar">
-        	<div class="clearcontainer">
-        		<h1>Search Employee:</h1>
-        		<form action="search.php" method="POST">
-        		<input type="text" name="address" placeholder = "Enter EmployeeID, First or Last name">
-        		<input type="submit" value="Search">
-        		</form>
-        		
-        	</div>
-        	
-        </section>
-
-<div class="tablecontainer">
+echo '<div class="tablecontainer">
 	<table>
+		<thead>
   		<tr>
   			<th>Client ID</th>
     		<th>Firstname</th>
     		<th>Lastname</th> 
-    		<th>Address</th>
     		<th>Phone</th>
-    		<th>email</th>
+    		<th>Email</th>
+    		<th>Address</th>
     		<th>Contract</th>
-    
-  		</tr>
-  		<tr>
-  			<td>001</td>
-   			<td>Jill</td>
-    		<td>Smith</td>
-    		<td>5320 love st</td>
-    		<td>541352573</td>
-    		<td>jsmith@gmail.com</td>  		
-    		<td><a href="contract.php">Contract</a></td>
-    		
-  		</tr>
+    	</thead>
+  		</tr>';
   		
-	</table>
-</div>
 
-		
+  		
+while($row = mysqli_fetch_array($result, MYSQLI_BOTH))
+  {
+
+  
+  	echo '<tbody><tr>
+  			  <td>'.$row[id].'</td>';
+   		echo '<td>'.$row[first_name].'</td>'; 
+    	echo '<td>'.$row[last_name].'</td>';
+    	echo '<td>'.$row[phone].'</td>';
+    	echo '<td>'.$row[mail].'</td>';
+    	echo '<td>'.$row[address].'</td>';
+    	echo '<td><a href=contract.php>Contract</a></td>';
+    		
+  		echo '</tr>
+  		</tbody>';
+  
+  }
+
+	echo '</table>
+</div>';
+
+?>
 
 </body>
 <footer>
